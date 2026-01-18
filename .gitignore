@@ -1,6 +1,37 @@
+# Dependencies
 node_modules
-.next
+pnpm-lock.yaml
+
+# Build outputs
 dist
+build
+.next
+out
+
+# Environment variables
 .env
-.env.*
+.env.local
+.env.*.local
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
 .DS_Store
+.sublime-*
+
+# Prisma generated client (regenerated on prisma generate)
+apps/*/prisma/generated/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
