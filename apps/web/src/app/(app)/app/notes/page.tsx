@@ -1,19 +1,12 @@
-import { notesApi } from "@/features/notes/api"
+import { NotesApiServer } from "@/features/notes/api.server"
 import { NotesSplitView } from "@/features/notes/components/NotesSplitView"
-import type { Note } from "@/features/notes/types"
 
 export const metadata = {
   title: "Notes",
 }
 
 export default async function NotesPage() {
-  let initialNotes: Note[] = []
-
-  try {
-    initialNotes = await notesApi.listNotes()
-  } catch (error) {
-    console.error("Failed to load initial notes:", error)
-  }
+  const initialNotes = await NotesApiServer.listNotes()
 
   return (
     <main className="flex flex-col h-full bg-transparent text-white gap-0">

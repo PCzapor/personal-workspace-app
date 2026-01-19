@@ -18,6 +18,7 @@ model User {
   
   sessions Session[]
   notes Note[]
+  savedLinks SavedLink[]
 
   @@index([createdAt])
 }
@@ -58,4 +59,22 @@ model Note {
   @@index([updatedAt])
   @@index([userId, createdAt(sort: Desc)])
   @@index([userId, updatedAt(sort: Desc)])
+}
+
+model SavedLink {
+  id String @id @default(cuid())
+  userId String
+  user User @relation(fields:[userId], references:[id], onDelete:Cascade)
+
+  url String
+  title String?
+  description String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, url])
+  @@index([userId])
+  @@index([createdAt])
+  @@index([userId, createdAt(sort: Desc)])
 }

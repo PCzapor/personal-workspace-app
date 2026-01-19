@@ -37,17 +37,17 @@ export class AuthController {
 
     res.cookie('pw_access', result.accessToken, {
       httpOnly: true,
-      sameSite: 'lax',
+      sameSite: 'none',
       path: '/',
-      secure: false, // true for prod
+      secure: true, // true for prod
       maxAge: 10 * 60 * 1000,
     });
 
     res.cookie('pw_refresh', result.refreshToken, {
       httpOnly: true,
-      sameSite: 'lax',
+      sameSite: 'none',
       path: '/',
-      secure: false,
+      secure: true,
     });
 
     return result.user;
@@ -79,18 +79,18 @@ export class AuthController {
 
     res.cookie('pw_access', result.accessToken, {
       httpOnly: true,
-      sameSite: 'lax',
+      sameSite: 'none',
       path: '/',
-      secure: false, // true for prod
+      secure: true, // true for prod
       maxAge: 10 * 60 * 1000,
     });
 
     if (rememberMe) {
       res.cookie('pw_refresh', result.refreshToken, {
         httpOnly: true,
-        sameSite: 'lax',
+        sameSite: 'none',
         path: '/',
-        secure: false,
+        secure: true,
         ...(rememberMe ? { maxAge: refreshMaxAgeMs } : {}),
       });
     }
@@ -116,17 +116,17 @@ export class AuthController {
 
     res.cookie('pw_access', result.accessToken, {
       httpOnly: true,
-      sameSite: 'lax',
+      sameSite: 'none',
       path: '/',
-      secure: false,
+      secure: true,
       maxAge: 10 * 60 * 1000,
     });
 
     res.cookie('pw_refresh', result.refreshToken, {
       httpOnly: true,
-      sameSite: 'lax',
+      sameSite: 'none',
       path: '/',
-      secure: false,
+      secure: true,
       maxAge: refreshMaxAgeMs,
     });
 
