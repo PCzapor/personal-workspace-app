@@ -2,6 +2,8 @@
 
 import { useState } from "react"
 import type { Note } from "../types"
+import { FormButton,  EmptyState } from "@/features/ui/custom"
+import { TextInput } from "@/features/ui/custom/TextInput"
 
 type NotesListProps = {
   notes: Note[]
@@ -28,29 +30,31 @@ export function NotesList({
 
   return (
     <div className="flex flex-col h-full gap-3 p-4">
-      <button
-        onClick={onNewNote}
-        disabled={isCreating}
-        className="w-full px-4 py-3 bg-white/90 text-black rounded-2xl font-medium hover:bg-white disabled:opacity-50 transition-all"
-        aria-label="Create new note"
-      >
-        {isCreating ? "Creating..." : "+ New Note"}
-      </button>
 
-      <input
+      <TextInput
         type="text"
         placeholder="Search notes..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        className="px-4 py-2 bg-white/[0.04] border border-white/10 rounded-2xl text-white/80 placeholder-white/35 focus:outline-none focus:ring-1 focus:ring-white/20"
         aria-label="Search notes"
       />
+      
+      <FormButton
+        onClick={onNewNote}
+        disabled={isCreating}
+        isLoading={isCreating}
+        loadingText="Creating..."
+        className="w-full"
+      >
+        + New Note
+      </FormButton>
 
-      <div className="flex-1 overflow-y-auto space-y-2 pr-2">
+      <div className="flex-1 overflow-y-auto space-y-2 ">
         {filteredNotes.length === 0 ? (
-          <div className="text-center text-white/50 py-8">
-            <p>{searchTerm ? "No notes found" : "No notes yet"}</p>
-          </div>
+          <EmptyState
+            title={searchTerm ? "No notes found" : "No notes yet"}
+            description={searchTerm ? "Try a different search term" : "Create one to get started"}
+          />
         ) : (
           filteredNotes.map((note) => (
             <button
@@ -58,8 +62,8 @@ export function NotesList({
               onClick={() => onSelect(note)}
               className={`w-full text-left px-4 py-3 rounded-2xl transition-all ${
                 selectedId === note.id
-                  ? "bg-white/[0.08] border border-white/30 ring-1 ring-white/20"
-                  : "bg-white/[0.04] border border-white/10 hover:bg-white/[0.06]"
+                  ? "bg-white/8 border border-white/30 ring-1 ring-white/20"
+                  : "bg-white/4 border border-white/10 hover:bg-white/6"
               }`}
               role="option"
               aria-selected={selectedId === note.id}

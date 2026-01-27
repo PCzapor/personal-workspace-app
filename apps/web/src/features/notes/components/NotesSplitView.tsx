@@ -1,13 +1,11 @@
 "use client"
 
 import { useEffect, useState, useCallback } from "react"
-import { useRouter } from "next/navigation"
 import { notesApi } from "../api"
 import { useDebouncedCallback } from "../../../lib/hooks/useDebouncedCallback"
 import type { Note } from "../types"
 import { NotesList } from "./NotesList"
 import { NoteEditor } from "./NoteEditor"
-import { NotesSplitViewSkeleton } from "./NotesSkeleton"
 
 type SaveStatus = "idle" | "saving" | "saved"
 
@@ -16,7 +14,6 @@ type NotesSplitViewProps = {
 }
 
 export function NotesSplitView({ initialNotes = [] }: NotesSplitViewProps) {
-  const router = useRouter()
   const [notes, setNotes] = useState<Note[]>(initialNotes)
   const [selectedId, setSelectedId] = useState<string | undefined>(() => {
     if (initialNotes && initialNotes.length > 0) {
@@ -24,7 +21,6 @@ export function NotesSplitView({ initialNotes = [] }: NotesSplitViewProps) {
     }
     return undefined
   })
-  const [isLoading, setIsLoading] = useState(!initialNotes || initialNotes.length === 0)
   const [isCreating, setIsCreating] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
   const [saveStatus, setSaveStatus] = useState<SaveStatus>("idle")
@@ -40,7 +36,6 @@ export function NotesSplitView({ initialNotes = [] }: NotesSplitViewProps) {
 
   const loadNotes = async () => {
     try {
-      setIsLoading(true)
       const loaded = await notesApi.listNotes()
       setNotes(loaded)
       if (loaded.length > 0 && !selectedId) {
@@ -51,14 +46,8 @@ export function NotesSplitView({ initialNotes = [] }: NotesSplitViewProps) {
       }
       setError(null)
     } catch (err: any) {
-      if (err.response?.status === 401) {
-        router.push("/login")
-        return
-      }
       setError("Failed to load notes")
       console.error(err)
-    } finally {
-      setIsLoading(false)
     }
   }
 
@@ -67,17 +56,11 @@ export function NotesSplitView({ initialNotes = [] }: NotesSplitViewProps) {
       try {
         setSaveStatus("saving")
         const updated = await notesApi.updateNote(id, updates)
-        setNotes((prev) =>
-          prev.map((n) => (n.id === id ? updated : n))
-        )
+        setNotes((prev) => prev.map((n) => (n.id === id ? updated : n)))
         setSaveStatus("saved")
-        setTimeout(() => setSaveStatus("idle"), 2000)
+        setTimeout(() => setSaveStatus("idle"), 5000)
         setError(null)
       } catch (err: any) {
-        if (err.response?.status === 401) {
-          router.push("/login")
-          return
-        }
         setError("Failed to save note")
         setSaveStatus("idle")
         console.error(err)
@@ -119,11 +102,8 @@ export function NotesSplitView({ initialNotes = [] }: NotesSplitViewProps) {
       setError(null)
     } catch (err: any) {
       console.error("Create note error:", err)
-      if (err.response?.status === 401) {
-        router.push("/login")
-        return
-      }
-      const errorMsg = err.response?.data?.message || err.message || "Failed to create note"
+      const errorMsg =
+        err.response?.data?.message || err.message || "Failed to create note"
       setError(errorMsg)
     } finally {
       setIsCreating(false)
@@ -149,10 +129,6 @@ export function NotesSplitView({ initialNotes = [] }: NotesSplitViewProps) {
       }
       setError(null)
     } catch (err: any) {
-      if (err.response?.status === 401) {
-        router.push("/login")
-        return
-      }
       setError("Failed to delete note")
       console.error(err)
     } finally {
@@ -160,43 +136,38 @@ export function NotesSplitView({ initialNotes = [] }: NotesSplitViewProps) {
     }
   }
 
-  if (isLoading) {
-    return <NotesSplitViewSkeleton />
-  }
-
   return (
-    <div className="grid md:grid-cols-[320px_1fr] gap-4 h-full">
-      <div className="bg-white/[0.04] border border-white/10 rounded-3xl backdrop-blur overflow-hidden flex flex-col">
-        <NotesList
-          notes={notes}
-          selectedId={selectedId}
-          onSelect={(note) => setSelectedId(note.id)}
-          onNewNote={handleNewNote}
-          isCreating={isCreating}
-        />
-      </div>
+    <div className='grid md:grid-cols-2 gap-4 h-full'>
+      <NotesList
+        notes={notes}
+        selectedId={selectedId}
+        onSelect={(note) => setSelectedId(note.id)}
+        onNewNote={handleNewNote}
+        isCreating={isCreating}
+      />
 
-      <div className="bg-white/[0.04] border border-white/10 rounded-3xl backdrop-blur overflow-hidden flex flex-col">
-        {notes.length === 0 ? (
-          <div className="flex items-center justify-center h-full text-white/50 flex-col gap-2">
-            <p className="text-lg">No notes yet</p>
-            <p className="text-sm">Create one to get started</p>
-          </div>
-        ) : (
-          <NoteEditor
-            note={selectedNote}
-            onTitleChange={handleTitleChange}
-            onContentChange={handleContentChange}
-            onDelete={handleDelete}
-            isSaving={saveStatus === "saving"}
-            saveStatus={saveStatus}
-            isDeleting={isDeleting}
-          />
-        )}
-      </div>
+      {notes.length === 0 ? (
+        <div className='flex items-center justify-center h-full text-white flex-col gap-2'>
+          <p className='text-lg'>No notes yet</p>
+          <p className='text-sm'>Create one to get started</p>
+        </div>
+      ) : (
+        <NoteEditor
+          note={selectedNote}
+          onTitleChange={handleTitleChange}
+          onContentChange={handleContentChange}
+          onDelete={handleDelete}
+          isSaving={saveStatus === "saving"}
+          saveStatus={saveStatus}
+          isDeleting={isDeleting}
+        />
+      )}
 
       {error && (
-        <div className="fixed bottom-4 right-4 bg-red-500/80 text-white px-4 py-3 rounded-2xl text-sm" role="alert">
+        <div
+          className='fixed bottom-4 right-4 bg-red-500/80 text-white px-4 py-3 rounded-2xl text-sm'
+          role='alert'
+        >
           {error}
         </div>
       )}

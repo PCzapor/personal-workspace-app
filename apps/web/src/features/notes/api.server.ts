@@ -3,11 +3,13 @@ import ApiService from "@/lib/api/api.service"
 import { cookies } from "next/headers"
 import type { Note } from "./types"
 
+const BASE_PATH = "/api/notes"
+
 export class NotesApiServer {
   static async listNotes(): Promise<Note[]> {
     const cookie = (await cookies()).toString()
     try {
-      const { data } = await ApiService.get<Note[]>("/api/notes", {
+      const { data } = await ApiService.get<Note[]>(BASE_PATH, {
         headers: { cookie },
       })
       return data || []
@@ -20,7 +22,7 @@ export class NotesApiServer {
   static async getNote(id: string): Promise<Note | null> {
     const cookie = (await cookies()).toString()
     try {
-      const { data } = await ApiService.get<Note>(`/api/notes/${id}`, {
+      const { data } = await ApiService.get<Note>(`${BASE_PATH}/${id}`, {
         headers: { cookie },
       })
       return data || null

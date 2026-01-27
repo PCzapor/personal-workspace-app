@@ -1,7 +1,7 @@
 import { IsUrl, IsOptional, IsString, MaxLength } from 'class-validator';
 
 export class CreateLinkDto {
-  @IsUrl({ require_protocol: true })
+  @IsString()
   url: string = '';
 
   @IsOptional()

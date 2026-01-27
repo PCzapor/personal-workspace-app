@@ -1,3 +1,4 @@
+import { clsx } from "clsx"
 export class ApiError extends Error {
   status: number
   data?: unknown
@@ -8,4 +9,8 @@ export class ApiError extends Error {
     this.status = status
     this.data = data
   }
+}
+
+export function cn(...inputs: any[]) {
+  return clsx(inputs)
 }

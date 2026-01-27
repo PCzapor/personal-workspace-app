@@ -3,11 +3,12 @@ import ApiService from "@/lib/api/api.service"
 import { cookies } from "next/headers"
 import type { SavedLink } from "./types"
 
+const BASE_PATH = "/api/links"
 export class LinksApiServer {
   static async listLinks(): Promise<SavedLink[]> {
     const cookie = (await cookies()).toString()
     try {
-      const { data } = await ApiService.get<SavedLink[]>("/api/links", {
+      const { data } = await ApiService.get<SavedLink[]>(BASE_PATH, {
         headers: { cookie },
       })
       return data || []
@@ -20,7 +21,7 @@ export class LinksApiServer {
   static async getLink(id: string): Promise<SavedLink | null> {
     const cookie = (await cookies()).toString()
     try {
-      const { data } = await ApiService.get<SavedLink>(`/api/links/${id}`, {
+      const { data } = await ApiService.get<SavedLink>(`${BASE_PATH}/${id}`, {
         headers: { cookie },
       })
       return data || null

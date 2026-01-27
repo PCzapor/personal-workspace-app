@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation"
 import _ApiService from "@/lib/api/api.service"
 import { AuthApiClient } from "@/features/auth/AuthApi.client"
+import { Button } from "../custom/Button"
 
 export function LogoutButton() {
   const router = useRouter()
@@ -17,11 +18,10 @@ export function LogoutButton() {
   }
 
   return (
-    <button
+    <Button
       onClick={onLogout}
-      className='rounded-2xl bg-white/90 px-4 py-2 text-sm font-medium text-black hover:bg-white'
     >
       Logout
-    </button>
+    </Button>
   )
 }

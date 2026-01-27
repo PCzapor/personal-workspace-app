@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import type { Note } from "../types"
+import { FormButton } from "@/features/ui/custom"
 
 type NoteEditorProps = {
   note: Note | null
@@ -36,9 +37,9 @@ export function NoteEditor({
 
   if (!note) {
     return (
-      <div className="flex items-center justify-center h-full text-white/50 flex-col gap-3">
-        <p className="text-lg">No note selected</p>
-        <p className="text-sm">Choose a note from the list to edit</p>
+      <div className='flex items-center justify-center h-full text-white/50 flex-col gap-3'>
+        <p className='text-lg'>No note selected</p>
+        <p className='text-sm'>Choose a note from the list to edit</p>
       </div>
     )
   }
@@ -62,31 +63,28 @@ export function NoteEditor({
   }
 
   return (
-    <div className="flex flex-col h-full p-6 gap-4">
-      <div className="flex items-center justify-between">
+    <div className='flex flex-col h-full p-6 gap-4'>
+      <div className='flex items-center justify-between'>
         <input
-          type="text"
+          type='text'
           value={title}
           onChange={(e) => handleTitleChange(e.target.value)}
-          placeholder="Note title..."
-          className="flex-1 text-xl font-semibold bg-transparent text-white/90 placeholder-white/35 focus:outline-none"
-          aria-label="Note title"
+          placeholder='Note title...'
+          className='min-w-0 flex-1 text-xl font-semibold bg-transparent text-white/90 placeholder-white/35 focus:outline-none'
+          aria-label='Note title'
         />
-        <button
+        <FormButton
+          variant={showDeleteConfirm ? "danger" : "secondary"}
+          size='sm'
           onClick={handleDeleteClick}
-          disabled={isDeleting}
-          className={`px-3 py-2 rounded-xl text-xs font-medium transition-all ${
-            showDeleteConfirm
-              ? "bg-red-500/80 text-white hover:bg-red-600"
-              : "bg-white/[0.04] border border-white/10 text-white/70 hover:bg-white/[0.06]"
-          } disabled:opacity-50`}
-          aria-label={showDeleteConfirm ? "Confirm delete note" : "Delete note"}
+          isLoading={isDeleting}
+          loadingText='...'
         >
-          {isDeleting ? "..." : showDeleteConfirm ? "Confirm?" : "Delete"}
-        </button>
+          {showDeleteConfirm ? "Confirm?" : "Delete"}
+        </FormButton>
       </div>
 
-      <div className="text-xs text-white/40 space-y-1">
+      <div className='text-xs text-white/70 space-y-1'>
         <p>Created: {new Date(note.createdAt).toLocaleString()}</p>
         <p>Updated: {new Date(note.updatedAt).toLocaleString()}</p>
       </div>
@@ -94,26 +92,28 @@ export function NoteEditor({
       <textarea
         value={content}
         onChange={(e) => handleContentChange(e.target.value)}
-        placeholder="Start typing your note..."
-        className="flex-1 w-full bg-white/[0.04] border border-white/10 rounded-2xl p-4 text-white/80 placeholder-white/50 focus:outline-none focus:ring-1 focus:ring-white/20 resize-none"
-        aria-label="Note content"
+        placeholder='Start typing your note...'
+        className='flex-1 w-full bg-white/4 border border-white/10 rounded-2xl p-4 text-white/80 placeholder-white/50 focus:outline-none focus:ring-1 focus:ring-white/20 resize-none'
+        aria-label='Note content'
       />
 
-      <div className="flex items-center justify-between text-xs">
+      <div className='flex items-center justify-between text-xs'>
         <div
-          className="text-white/40"
-          role="status"
-          aria-live="polite"
-          aria-atomic="true"
+          className='text-white/40'
+          role='status'
+          aria-live='polite'
+          aria-atomic='true'
         >
           {saveStatus === "saving" && <span>Saving...</span>}
-          {saveStatus === "saved" && <span className="text-green-400/70">Saved</span>}
+          {saveStatus === "saved" && (
+            <span className='text-green-400/70'>Saved</span>
+          )}
         </div>
         {showDeleteConfirm && (
           <button
             onClick={() => setShowDeleteConfirm(false)}
-            className="text-white/40 hover:text-white/60 transition-colors"
-            aria-label="Cancel delete"
+            className='text-white/40 hover:text-white/60 transition-colors'
+            aria-label='Cancel delete'
           >
             Cancel
           </button>

@@ -13,13 +13,14 @@ import type { Request } from 'express';
 import { AccessGuard } from '../auth/infrastructure/guard/auth.guard';
 import { NotesService } from './notes.service';
 import { Note } from '@prisma/client';
-import type { CreateNoteDto, UpdateNoteDto } from './misc/notest.types';
+import type { CreateNoteDto, UpdateNoteDto } from './misc/notes.types';
 import { AuthService } from '../auth/auth.service';
 
 @Controller('notes')
 export class NotesController {
-  constructor(private readonly notes: NotesService,
-    private readonly auth: AuthService
+  constructor(
+    private readonly notes: NotesService,
+    private readonly auth: AuthService,
   ) {}
 
   @Get()
@@ -43,7 +44,7 @@ export class NotesController {
   @Post()
   @UseGuards(AccessGuard)
   async create(@Req() req: Request, @Body() dto: CreateNoteDto): Promise<Note> {
-    const { userId } = req.auth!
+    const { userId } = req.auth!;
     return await this.notes.addNote(userId, dto);
   }
 

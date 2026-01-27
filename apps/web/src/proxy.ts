@@ -8,9 +8,16 @@ export function proxy(req: NextRequest) {
   const hasRefresh = !!req.cookies.get("pw_refresh")?.value
   const hasAnySession = hasAccess || hasRefresh
 
-  if (pathname.startsWith("/login") && hasAnySession) {
+  if (pathname.startsWith("/login") && hasAccess) {
     const url = req.nextUrl.clone()
     url.pathname = "/app"
+    return NextResponse.redirect(url)
+  }
+
+  if (pathname.startsWith("/app") && !hasAccess && hasRefresh) {
+    const url = req.nextUrl.clone()
+    url.pathname = "/api/session/refresh"
+    url.searchParams.set("next", req.nextUrl.pathname + req.nextUrl.search)
     return NextResponse.redirect(url)
   }
 

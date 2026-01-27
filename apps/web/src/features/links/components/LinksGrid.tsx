@@ -1,32 +1,34 @@
-'use client'
+"use client"
 
 import React, { useState } from "react"
 import { SavedLink } from "../types"
 import { linksApi } from "../api"
-import { Button } from "@/features/ui/custom/Button"
-import { TextInput } from "@/features/ui/custom/TextInput"
+import { FormButton, Alert, EmptyState } from "@/features/ui/custom"
 import { LinkCard } from "./LinkCard"
 import { useCallback } from "react"
+import { TextInput } from "@/features/ui/custom/TextInput"
 
 interface LinksGridProps {
   initialLinks: SavedLink[]
 }
 
-export const LinksGrid: React.FC<LinksGridProps> = ({ initialLinks }) => {
+export function LinksGrid({ initialLinks }: LinksGridProps) {
   const [links, setLinks] = useState<SavedLink[]>(initialLinks)
-  const [searchTerm, setSearchTerm] = useState('')
+  const [searchTerm, setSearchTerm] = useState("")
   const [isAdding, setIsAdding] = useState(false)
-  const [newUrl, setNewUrl] = useState('')
-  const [newTitle, setNewTitle] = useState('')
+  const [newUrl, setNewUrl] = useState("")
+  const [newTitle, setNewTitle] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const filteredLinks = links.filter((link) => {
     const query = searchTerm.toLowerCase()
     return (
-      (link.title?.toLowerCase().includes(query) || false) ||
+      link.title?.toLowerCase().includes(query) ||
+      false ||
       link.url.toLowerCase().includes(query) ||
-      (link.description?.toLowerCase().includes(query) || false)
+      link.description?.toLowerCase().includes(query) ||
+      false
     )
   })
 
@@ -42,14 +44,14 @@ export const LinksGrid: React.FC<LinksGridProps> = ({ initialLinks }) => {
         title: newTitle,
       })
       setLinks([link, ...links])
-      setNewUrl('')
-      setNewTitle('')
+      setNewUrl("")
+      setNewTitle("")
       setIsAdding(false)
     } catch (err: any) {
       if (err.response?.status === 409) {
-        setError('This link already exists')
+        setError("This link already exists")
       } else {
-        setError(err.message || 'Failed to add link')
+        setError(err.message || "Failed to add link")
       }
     } finally {
       setIsLoading(false)
@@ -65,7 +67,7 @@ export const LinksGrid: React.FC<LinksGridProps> = ({ initialLinks }) => {
         const updated = await linksApi.updateLink(id, updateData)
         setLinks((prev) => prev.map((l) => (l.id === id ? updated : l)))
       } catch (err) {
-        console.error('Failed to update link:', err)
+        console.error("Failed to update link:", err)
         throw err
       }
     },
@@ -77,67 +79,80 @@ export const LinksGrid: React.FC<LinksGridProps> = ({ initialLinks }) => {
       await linksApi.deleteLink(id)
       setLinks((prev) => prev.filter((l) => l.id !== id))
     } catch (err) {
-      console.error('Failed to delete link:', err)
+      console.error("Failed to delete link:", err)
     }
   }, [])
 
   return (
-    <div className="space-y-6">
+    <div className='space-y-6'>
       <TextInput
-        type="text"
-        placeholder="Search links..."
+        type='text'
+        placeholder='Search links...'
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
       />
 
       {!isAdding ? (
-        <Button onClick={() => setIsAdding(true)}>+ Add Link</Button>
+        <FormButton onClick={() => setIsAdding(true)}>+ Add Link</FormButton>
       ) : (
-        <form onSubmit={handleAddLink} className="space-y-3">
+        <form onSubmit={handleAddLink} className='space-y-3'>
           <TextInput
-            type="url"
-            placeholder="https://example.com"
+            type='text'
+            placeholder='https://example.com'
             value={newUrl}
             onChange={(e) => setNewUrl(e.target.value)}
             required
-            label="URL"
+            label='URL'
           />
           <TextInput
-            type="text"
-            placeholder="Optional title"
+            type='text'
+            placeholder='Optional title'
             value={newTitle}
             onChange={(e) => setNewTitle(e.target.value)}
-            label="Title"
+            label='Title'
           />
-          {error && <p className="text-sm text-red-400">{error}</p>}
-          <div className="flex gap-2">
-            <Button type="submit" disabled={isLoading}>
-              {isLoading ? 'Adding...' : 'Add'}
-            </Button>
-            <Button
-              type="button"
-              variant="secondary"
+          {error && (
+            <Alert variant='error' onClose={() => setError(null)}>
+              {error}
+            </Alert>
+          )}
+          <div className='flex gap-2'>
+            <FormButton
+              type='submit'
+              isLoading={isLoading}
+              loadingText='Adding...'
+            >
+              Add
+            </FormButton>
+            <FormButton
+              type='button'
+              variant='secondary'
               onClick={() => {
                 setIsAdding(false)
-                setNewUrl('')
-                setNewTitle('')
+                setNewUrl("")
+                setNewTitle("")
                 setError(null)
               }}
             >
               Cancel
-            </Button>
+            </FormButton>
           </div>
         </form>
       )}
 
       {filteredLinks.length === 0 ? (
-        <div className="py-12 text-center">
-          <p className="text-white/50">
-            {links.length === 0 ? 'No links yet. Add one to get started!' : 'No links match your search.'}
-          </p>
-        </div>
+        <EmptyState
+          title={
+            links.length === 0 ? "No links yet" : "No links match your search"
+          }
+          description={
+            links.length === 0
+              ? "Add one to get started"
+              : "Try a different search term"
+          }
+        />
       ) : (
-        <div className="grid gap-3">
+        <div className='grid gap-3'>
           {filteredLinks.map((link) => (
             <LinkCard
               key={link.id}

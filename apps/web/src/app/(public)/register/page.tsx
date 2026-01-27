@@ -2,11 +2,11 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import ApiService from "@/lib/api/api.service"
 import { ApiError } from "@/lib/helpers"
-import { AuthCard } from "@/features/ui/auth/AuthCard"
 import _ApiService from "@/lib/api/api.service"
 import { AuthApiClient } from "@/features/auth/AuthApi.client"
+import { FormButton, Alert, TextInput, Card } from "@/features/ui/custom"
+import Link from "next/link"
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -45,70 +45,69 @@ export default function RegisterPage() {
   }
 
   return (
-    <AuthCard>
+    <Card>
       <div className='space-y-2'>
         <h1 className='text-2xl font-semibold text-white'>Create account</h1>
         <p className='text-white/70'>Start building your workspace.</p>
       </div>
 
       <form className='mt-6 space-y-3' onSubmit={onSubmit}>
-        <label className='block'>
-          <span className='text-sm text-white/80'>Email</span>
-          <input
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            autoComplete='email'
-            inputMode='email'
-            className='mt-1 w-full rounded-xl border border-white/15 bg-white/10 px-3 py-2 text-white placeholder-white/40 outline-none focus:ring-2 focus:ring-white/30'
-            placeholder='you@domain.com'
-          />
-        </label>
+        <TextInput
+          label='Email'
+          type='email'
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          autoComplete='email'
+          inputMode='email'
+          placeholder='you@domain.com'
+          required
+        />
 
-        <label className='block'>
-          <span className='text-sm text-white/80'>Password</span>
-          <input
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            type='password'
-            autoComplete='new-password'
-            className='mt-1 w-full rounded-xl border border-white/15 bg-white/10 px-3 py-2 text-white placeholder-white/40 outline-none focus:ring-2 focus:ring-white/30'
-            placeholder='At least 8 characters'
-          />
-        </label>
+        <TextInput
+          label='Password'
+          type='password'
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          autoComplete='new-password'
+          placeholder='At least 8 characters'
+          required
+        />
 
-        <label className='block'>
-          <span className='text-sm text-white/80'>Confirm password</span>
-          <input
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            type='password'
-            autoComplete='new-password'
-            className='mt-1 w-full rounded-xl border border-white/15 bg-white/10 px-3 py-2 text-white placeholder-white/40 outline-none focus:ring-2 focus:ring-white/30'
-            placeholder='Repeat password'
-          />
-        </label>
+        <TextInput
+          label='Confirm password'
+          type='password'
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          autoComplete='new-password'
+          placeholder='Repeat password'
+          required
+        />
 
-        {error ? (
-          <p className='text-sm text-red-300' role='alert'>
+        {error && (
+          <Alert variant='error' onClose={() => setError(null)}>
             {error}
-          </p>
-        ) : null}
+          </Alert>
+        )}
 
-        <button
+        <FormButton
           type='submit'
-          disabled={isLoading}
-          className='mt-2 w-full rounded-xl bg-white/90 px-4 py-2 font-medium text-black hover:bg-white disabled:cursor-not-allowed disabled:opacity-70'
+          isLoading={isLoading}
+          loadingText='Creating...'
+          className='w-full'
         >
-          {isLoading ? "Creating..." : "Create account"}
-        </button>
+          Create account
+        </FormButton>
 
         <p className='pt-2 text-sm text-white/70'>
           Already have an account?{" "}
-          <a className='text-white underline underline-offset-4' href='/login'>
+          <Link
+            className='text-white underline underline-offset-4'
+            href='/login'
+          >
             Sign in
-          </a>
+          </Link>
         </p>
       </form>
-    </AuthCard>
+    </Card>
   )
 }

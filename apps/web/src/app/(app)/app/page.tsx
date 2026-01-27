@@ -1,4 +1,4 @@
-import { Card } from "@/features/ui/card/Card"
+import { FormButton, Card } from "@/features/ui/custom"
 
 export default function DashboardPage() {
   return (
@@ -8,12 +8,10 @@ export default function DashboardPage() {
           <div className='space-y-3'>
             <textarea
               placeholder='Write a thought, idea, or task...'
-              className='min-h-[110px] w-full resize-none rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white placeholder:text-white/35 outline-none focus:ring-2 focus:ring-white/20'
+              className='min-h-27.5 w-full resize-none rounded-2xl border border-white/10 bg-white/4 px-4 py-3 text-sm text-white placeholder:text-white/35 outline-none focus:ring-2 focus:ring-white/20'
             />
             <div className='flex justify-end'>
-              <button className='rounded-2xl bg-white/90 px-4 py-2 text-sm font-medium text-black hover:bg-white'>
-                Save
-              </button>
+              <FormButton size="sm">Save</FormButton>
             </div>
           </div>
         </Card>
@@ -37,11 +35,11 @@ export default function DashboardPage() {
 
         <Card title='Pinned'>
           <div className='space-y-2'>
-            <div className='rounded-2xl border border-white/10 bg-white/[0.04] p-3'>
+            <div className='rounded-2xl border border-white/10 bg-white/4 p-3'>
               <p className='text-sm text-white/80'>⚡ Onboarding plan</p>
               <p className='text-xs text-white/45'>Checklist • 7 items</p>
             </div>
-            <div className='rounded-2xl border border-white/10 bg-white/[0.04] p-3'>
+            <div className='rounded-2xl border border-white/10 bg-white/4 p-3'>
               <p className='text-sm text-white/80'>🔗 System design links</p>
               <p className='text-xs text-white/45'>Links • 12 saved</p>
             </div>
@@ -51,11 +49,11 @@ export default function DashboardPage() {
 
       <Card title='Recent activity'>
         <div className='grid gap-3 md:grid-cols-2'>
-          <div className='rounded-2xl border border-white/10 bg-white/[0.04] p-4'>
+          <div className='rounded-2xl border border-white/10 bg-white/4 p-4'>
             <p className='text-sm text-white/80'>Note: “Auth ideas”</p>
             <p className='mt-1 text-xs text-white/45'>Edited 5 minutes ago</p>
           </div>
-          <div className='rounded-2xl border border-white/10 bg-white/[0.04] p-4'>
+          <div className='rounded-2xl border border-white/10 bg-white/4 p-4'>
             <p className='text-sm text-white/80'>
               Link saved: “Prisma sessions”
             </p>

@@ -3,7 +3,7 @@ import { Prisma } from '@prisma/client';
 
 import { PrismaService } from '@/modules/auth/infrastructure/prisma/prisma.service';
 
-import type { CreateNoteDto, UpdateNoteDto } from './misc/notest.types';
+import type { CreateNoteDto, UpdateNoteDto } from './misc/notes.types';
 
 @Injectable()
 export class NotesService {
@@ -36,13 +36,6 @@ export class NotesService {
     return note;
   }
 
-  async delete(noteId: string, userId: string) {
-    await this.prisma.note.delete({
-      where: { id: noteId, userId },
-    });
-    return { id: noteId };
-  }
-
   async update(userId: string, noteId: string, dto: UpdateNoteDto) {
     const exists = await this.prisma.note.findFirst({
       where: { id: noteId, userId: userId },
@@ -56,5 +49,12 @@ export class NotesService {
       data,
     });
     return updated;
+  }
+
+  async delete(noteId: string, userId: string) {
+    await this.prisma.note.delete({
+      where: { id: noteId, userId },
+    });
+    return { id: noteId };
   }
 }

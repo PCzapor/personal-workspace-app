@@ -1,18 +1,28 @@
 import { NotesApiServer } from "@/features/notes/api.server"
 import { NotesSplitView } from "@/features/notes/components/NotesSplitView"
+import { Card, NotesSplitViewSkeleton } from "@/features/ui/custom"
+import { Metadata } from "next"
+import { Suspense } from "react"
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Notes",
+  description: "Bookmark and organize your important notes",
 }
 
 export default async function NotesPage() {
   const initialNotes = await NotesApiServer.listNotes()
 
   return (
-    <main className="flex flex-col h-full bg-transparent text-white gap-0">
-      <div className="flex-1 overflow-hidden">
-        <NotesSplitView initialNotes={initialNotes} />
+    <Card>
+      <div>
+        <h1 className='text-3xl font-bold text-white'>Saved Notes</h1>
+        <p className='text-white/60 mt-2'>
+          Bookmark and organize your important notes
+        </p>
       </div>
-    </main>
+      <Suspense fallback={<NotesSplitViewSkeleton />}>
+        <NotesSplitView initialNotes={initialNotes} />
+      </Suspense>
+    </Card>
   )
 }

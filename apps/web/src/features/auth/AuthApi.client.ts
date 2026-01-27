@@ -1,5 +1,5 @@
-import ApiService from "../../lib/api/api.service"
 import type { AuthUser, LoginBody, RegisterBody } from "@/features/auth/types"
+import ApiService from "@/lib/api/api.service"
 
 export class AuthApiClient {
   static async refreshSession() {

@@ -2,8 +2,9 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { AuthCard } from "@/features/ui/auth/AuthCard"
 import { AuthApiClient } from "@/features/auth/AuthApi.client"
+import { FormButton, Card, TextInput, Alert} from "@/features/ui/custom"
+import Link from "next/link"
 
 export default function Login() {
   const router = useRouter()
@@ -31,70 +32,70 @@ export default function Login() {
   }
 
   return (
-    <AuthCard>
+    
+    <Card>
       <div className='space-y-2'>
         <h1 className='text-2xl font-semibold text-white'>Welcome back</h1>
         <p className='text-white/70'>Sign in to your workspace.</p>
       </div>
 
       <form className='mt-6 space-y-3' onSubmit={onSubmit}>
-        <label className='block'>
-          <span className='text-sm text-white/80'>Email</span>
-          <input
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            autoComplete='email'
-            inputMode='email'
-            className='mt-1 w-full rounded-xl border border-white/15 bg-white/10 px-3 py-2 text-white placeholder-white/40 outline-none focus:ring-2 focus:ring-white/30'
-            placeholder='you@domain.com'
+        <TextInput
+          label="Email"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          autoComplete='email'
+          inputMode='email'
+          placeholder='you@domain.com'
+          required
           />
-        </label>
 
-        <label className='block'>
-          <span className='text-sm text-white/80'>Password</span>
-          <input
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            type='password'
-            autoComplete='current-password'
-            className='mt-1 w-full rounded-xl border border-white/15 bg-white/10 px-3 py-2 text-white placeholder-white/40 outline-none focus:ring-2 focus:ring-white/30'
-            placeholder='••••••••'
+        <TextInput
+          label="Password"
+          type='password'
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          autoComplete='current-password'
+          placeholder='••••••••'
+          required
           />
-        </label>
 
-        <label className='mt-1 flex items-center gap-2 text-sm text-white/80'>
+        <label className='flex items-center gap-2 text-sm text-white/80'>
           <input
             type='checkbox'
             checked={rememberMe}
             onChange={(e) => setRememberMe(e.target.checked)}
             className='h-4 w-4 rounded border-white/20 bg-white/10 text-white accent-white/90'
-          />
+            />
           Remember me
         </label>
 
-        {error ? (
-          <p className='text-sm text-red-300' role='alert'>
+        {error && (
+          <Alert variant="error" onClose={() => setError(null)}>
             {error}
-          </p>
-        ) : null}
+          </Alert>
+        )}
 
-        <button
+        <FormButton
           type='submit'
-          disabled={isLoading}
-          className='mt-2 w-full rounded-xl bg-white/90 px-4 py-2 font-medium text-black hover:bg-white disabled:cursor-not-allowed disabled:opacity-70'
-        >
-          {isLoading ? "Signing in..." : "Sign in"}
-        </button>
+          isLoading={isLoading}
+          loadingText="Signing in..."
+          className='w-full mt-2'
+          >
+          Sign in
+        </FormButton>
         <p className='pt-2 text-sm text-white/70'>
           Don’t have an account?{" "}
-          <a
+          <Link
             className='text-white underline underline-offset-4'
             href='/register'
-          >
+            >
             Create one
-          </a>
+          </Link>
         </p>
       </form>
-    </AuthCard>
+    </Card>
+            
   )
 }

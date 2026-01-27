@@ -14,9 +14,7 @@ async function proxy(request: Request, params: ParamsType) {
   const headers = new Headers(request.headers)
   headers.delete("host")
 
-  const cookieFromReq = request.headers.get("cookie")
-  const cookieFromStore = (await cookies()).toString()
-  const cookieToSend = cookieFromReq || cookieFromStore
+  const cookieToSend = request.headers.get("cookie")
   if (cookieToSend) headers.set("cookie", cookieToSend)
 
   const method = request.method.toUpperCase()

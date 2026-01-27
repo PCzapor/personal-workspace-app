@@ -35,19 +35,20 @@ export class AuthController {
     if (req.headers['user-agent']) meta.userAgent = req.headers['user-agent'];
     const result = await this.auth.register(body.email, body.password, meta);
 
+    const isProduction = process.env.NODE_ENV === 'production';
     res.cookie('pw_access', result.accessToken, {
       httpOnly: true,
-      sameSite: 'none',
+      sameSite: isProduction ? 'none' : 'lax',
       path: '/',
-      secure: true, // true for prod
+      secure: isProduction,
       maxAge: 10 * 60 * 1000,
     });
 
     res.cookie('pw_refresh', result.refreshToken, {
       httpOnly: true,
-      sameSite: 'none',
+      sameSite: isProduction ? 'none' : 'lax',
       path: '/',
-      secure: true,
+      secure: isProduction,
     });
 
     return result.user;
@@ -76,21 +77,22 @@ export class AuthController {
       0,
       result.refreshMaxAge.getTime() - Date.now(),
     );
+    const isProduction = process.env.NODE_ENV === 'production';
 
     res.cookie('pw_access', result.accessToken, {
       httpOnly: true,
-      sameSite: 'none',
+      sameSite: isProduction ? 'none' : 'lax',
       path: '/',
-      secure: true, // true for prod
+      secure: isProduction,
       maxAge: 10 * 60 * 1000,
     });
 
     if (rememberMe) {
       res.cookie('pw_refresh', result.refreshToken, {
         httpOnly: true,
-        sameSite: 'none',
+        sameSite: isProduction ? 'none' : 'lax',
         path: '/',
-        secure: true,
+        secure: isProduction,
         ...(rememberMe ? { maxAge: refreshMaxAgeMs } : {}),
       });
     }
@@ -113,20 +115,21 @@ export class AuthController {
       0,
       result.refreshMaxAge.getTime() - Date.now(),
     );
+    const isProduction = process.env.NODE_ENV === 'production';
 
     res.cookie('pw_access', result.accessToken, {
       httpOnly: true,
-      sameSite: 'none',
+      sameSite: isProduction ? 'none' : 'lax',
       path: '/',
-      secure: true,
+      secure: isProduction,
       maxAge: 10 * 60 * 1000,
     });
 
     res.cookie('pw_refresh', result.refreshToken, {
       httpOnly: true,
-      sameSite: 'none',
+      sameSite: isProduction ? 'none' : 'lax',
       path: '/',
-      secure: true,
+      secure: isProduction,
       maxAge: refreshMaxAgeMs,
     });
 

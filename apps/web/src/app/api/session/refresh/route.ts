@@ -13,7 +13,12 @@ export async function GET() {
     cache: "no-store",
   })
   if (!backendRes.ok) {
-    return NextResponse.redirect(new URL("/login", "http://localhost:3000"))
+    const res = NextResponse.redirect(
+      new URL("/login", "http://localhost:3000")
+    )
+    res.cookies.set("pw_access", "", { path: "/", maxAge: 0 })
+    res.cookies.set("pw_refresh", "", { path: "/", maxAge: 0 })
+    return res
   }
 
   const res = NextResponse.redirect(new URL("/app", "http://localhost:3000"))
