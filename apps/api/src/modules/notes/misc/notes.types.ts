@@ -22,4 +22,5 @@ export class CreateNoteDto {
   @MaxLength(100_000)
   content?: string;
 }
+
 export class UpdateNoteDto extends CreateNoteDto {}

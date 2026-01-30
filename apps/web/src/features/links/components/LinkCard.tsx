@@ -2,7 +2,7 @@
 
 import React, { useState } from "react"
 import { SavedLink } from "../types"
-import { FormButton, TextInput } from "@/features/ui/custom"
+import { Button, TextInput } from "@/features/ui/custom"
 interface LinkCardProps {
   link: SavedLink
   onEdit: (link: SavedLink) => void
@@ -54,7 +54,7 @@ export function LinkCard({ link, onEdit, onDelete, onUpdate }: LinkCardProps) {
           className='min-h-20'
         />
         <div className='flex gap-2 justify-end'>
-          <FormButton
+          <Button
             variant='secondary'
             size='sm'
             onClick={() => {
@@ -64,15 +64,15 @@ export function LinkCard({ link, onEdit, onDelete, onUpdate }: LinkCardProps) {
             }}
           >
             Cancel
-          </FormButton>
-          <FormButton
+          </Button>
+          <Button
             size='sm'
             onClick={handleSave}
             isLoading={isSaving}
             loadingText='Saving...'
           >
             Save
-          </FormButton>
+          </Button>
         </div>
       </div>
     )
@@ -107,16 +107,16 @@ export function LinkCard({ link, onEdit, onDelete, onUpdate }: LinkCardProps) {
           )}
         </div>
         <div className='flex gap-2 shrink-0'>
-          <FormButton
+          <Button
             variant='secondary'
             size='sm'
             onClick={() => setIsEditing(true)}
           >
             Edit
-          </FormButton>
-          <FormButton variant='danger' size='sm' onClick={handleDelete}>
+          </Button>
+          <Button variant='danger' size='sm' onClick={handleDelete}>
             Delete
-          </FormButton>
+          </Button>
         </div>
       </div>
     </div>

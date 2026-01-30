@@ -1,10 +1,10 @@
 import type { AuthUser, LoginBody, RegisterBody } from "@/features/auth/types"
-import ApiService from "@/lib/api/api.service"
+import _ApiService from "@/lib/api/api.service"
 
 export class AuthApiClient {
   static async refreshSession() {
     try {
-      const { data } = await ApiService.get<AuthUser>("/api/auth/refresh", {})
+      const { data } = await _ApiService.get<AuthUser>("/api/auth/refresh", {})
       return data
     } catch {
       return Promise.reject("Refresh tokens failed")
@@ -13,7 +13,7 @@ export class AuthApiClient {
 
   static async authMe() {
     try {
-      const { data } = await ApiService.get<AuthUser>("/api/auth/me")
+      const { data } = await _ApiService.get<AuthUser>("/api/auth/me")
       return data
     } catch {
       return null
@@ -22,7 +22,7 @@ export class AuthApiClient {
 
   static async login(email: string, password: string, rememberMe: boolean) {
     try {
-      await ApiService.post<AuthUser, LoginBody>("/api/auth/login", {
+      await _ApiService.post<AuthUser, LoginBody>("/api/auth/login", {
         email,
         password,
         rememberMe,
@@ -35,7 +35,7 @@ export class AuthApiClient {
 
   static async register(email: string, password: string) {
     try {
-      await ApiService.post<RegisterBody>("/api/auth/register", {
+      await _ApiService.post<RegisterBody>("/api/auth/register", {
         email,
         password,
       })
@@ -47,7 +47,7 @@ export class AuthApiClient {
 
   static async logout() {
     try {
-      await ApiService.post("/api/auth/logout", {})
+      await _ApiService.post("/api/auth/logout", {})
       return true
     } catch {
       return false

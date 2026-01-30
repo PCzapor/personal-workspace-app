@@ -1,13 +1,14 @@
-import { AuthErrorCode } from './misc/auth.errors';
-import { PasswordService } from './infrastructure/hashing/password.service';
-import { SessionService } from './infrastructure/sessions/session.service';
-import { TokenService } from './infrastructure/tokens/token.service';
-import { PrismaService } from './infrastructure/prisma/prisma.service';
 import {
   ConflictException,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
+
+import { PasswordService } from './infrastructure/hashing/password.service';
+import { PrismaService } from './infrastructure/prisma/prisma.service';
+import { SessionService } from './infrastructure/sessions/session.service';
+import { TokenService } from './infrastructure/tokens/token.service';
+import { AuthErrorCode } from './misc/auth.errors';
 
 @Injectable()
 export class AuthService {

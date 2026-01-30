@@ -9,12 +9,14 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import type { Request } from 'express';
-import { AccessGuard } from '../auth/infrastructure/guard/auth.guard';
-import { NotesService } from './notes.service';
 import { Note } from '@prisma/client';
-import type { CreateNoteDto, UpdateNoteDto } from './misc/notes.types';
+import type { Request } from 'express';
+
 import { AuthService } from '../auth/auth.service';
+import { AccessGuard } from '../auth/infrastructure/guard/auth.guard';
+
+import { CreateNoteDto, UpdateNoteDto } from './misc/notes.types';
+import { NotesService } from './notes.service';
 
 @Controller('notes')
 export class NotesController {

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import { ApiError } from "@/lib/helpers"
 import _ApiService from "@/lib/api/api.service"
 import { AuthApiClient } from "@/features/auth/AuthApi.client"
-import { FormButton, Alert, TextInput, Card } from "@/features/ui/custom"
+import { Button, Alert, TextInput, Card } from "@/features/ui/custom"
 import Link from "next/link"
 
 export default function RegisterPage() {
@@ -89,14 +89,14 @@ export default function RegisterPage() {
           </Alert>
         )}
 
-        <FormButton
+        <Button
           type='submit'
           isLoading={isLoading}
           loadingText='Creating...'
           className='w-full'
         >
           Create account
-        </FormButton>
+        </Button>
 
         <p className='pt-2 text-sm text-white/70'>
           Already have an account?{" "}

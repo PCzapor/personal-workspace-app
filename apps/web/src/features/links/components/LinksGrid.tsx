@@ -3,7 +3,7 @@
 import React, { useState } from "react"
 import { SavedLink } from "../types"
 import { linksApi } from "../api"
-import { FormButton, Alert, EmptyState } from "@/features/ui/custom"
+import { Button, Alert, EmptyState } from "@/features/ui/custom"
 import { LinkCard } from "./LinkCard"
 import { useCallback } from "react"
 import { TextInput } from "@/features/ui/custom/TextInput"
@@ -93,7 +93,7 @@ export function LinksGrid({ initialLinks }: LinksGridProps) {
       />
 
       {!isAdding ? (
-        <FormButton onClick={() => setIsAdding(true)}>+ Add Link</FormButton>
+        <Button onClick={() => setIsAdding(true)}>+ Add Link</Button>
       ) : (
         <form onSubmit={handleAddLink} className='space-y-3'>
           <TextInput
@@ -117,14 +117,10 @@ export function LinksGrid({ initialLinks }: LinksGridProps) {
             </Alert>
           )}
           <div className='flex gap-2'>
-            <FormButton
-              type='submit'
-              isLoading={isLoading}
-              loadingText='Adding...'
-            >
+            <Button type='submit' isLoading={isLoading} loadingText='Adding...'>
               Add
-            </FormButton>
-            <FormButton
+            </Button>
+            <Button
               type='button'
               variant='secondary'
               onClick={() => {
@@ -135,7 +131,7 @@ export function LinksGrid({ initialLinks }: LinksGridProps) {
               }}
             >
               Cancel
-            </FormButton>
+            </Button>
           </div>
         </form>
       )}

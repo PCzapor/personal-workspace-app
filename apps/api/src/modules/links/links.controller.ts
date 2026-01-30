@@ -11,9 +11,15 @@ import {
   Req,
 } from '@nestjs/common';
 import type { Request } from 'express';
-import { LinksService } from './links.service';
-import { CreateLinkDto, UpdateLinkDto, SavedLinkResponse } from './misc/links.types';
+
 import { AccessGuard } from '../auth/infrastructure/guard/auth.guard';
+
+import { LinksService } from './links.service';
+import {
+  CreateLinkDto,
+  UpdateLinkDto,
+  SavedLinkResponse,
+} from './misc/links.types';
 
 @Controller('links')
 export class LinksController {
@@ -60,7 +66,10 @@ export class LinksController {
   @Delete(':id')
   @HttpCode(204)
   @UseGuards(AccessGuard)
-  async deleteLink(@Req() req: Request, @Param('id') linkId: string): Promise<void> {
+  async deleteLink(
+    @Req() req: Request,
+    @Param('id') linkId: string,
+  ): Promise<void> {
     const { userId } = req.auth!;
     return this.links.deleteLink(userId, linkId);
   }

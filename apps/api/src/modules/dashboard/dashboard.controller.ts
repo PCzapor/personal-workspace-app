@@ -1,7 +1,9 @@
 import { Controller, Get, UseGuards, Req } from '@nestjs/common';
 import type { Request } from 'express';
-import { DashboardService } from './dashboard.service';
+
 import { AccessGuard } from '../auth/infrastructure/guard/auth.guard';
+
+import { DashboardService } from './dashboard.service';
 import { DashboardSummary } from './misc/dashboard.types';
 
 @Controller('dashboard')

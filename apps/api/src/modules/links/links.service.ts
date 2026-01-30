@@ -1,11 +1,14 @@
-import {
-  Injectable,
-  NotFoundException,
-  ConflictException,
-} from '@nestjs/common';
-import { PrismaService } from '@/modules/auth/infrastructure/prisma/prisma.service';
-import { CreateLinkDto, UpdateLinkDto, SavedLinkResponse } from './misc/links.types';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { Prisma, SavedLink } from '@prisma/client';
+
 import { LinksErrorCode } from './misc/links.errors';
+import {
+  CreateLinkDto,
+  UpdateLinkDto,
+  SavedLinkResponse,
+} from './misc/links.types';
+
+import { PrismaService } from '@/modules/auth/infrastructure/prisma/prisma.service';
 
 @Injectable()
 export class LinksService {
@@ -16,10 +19,13 @@ export class LinksService {
       where: { userId },
       orderBy: { createdAt: 'desc' },
     });
-    return links.map(this.formatLink);
+    return links.map((l) => this.formatLink(l));
   }
 
-  async getLinkById(userId: string, linkId: string): Promise<SavedLinkResponse> {
+  async getLinkById(
+    userId: string,
+    linkId: string,
+  ): Promise<SavedLinkResponse> {
     const link = await this.prisma.savedLink.findFirst({
       where: { id: linkId, userId },
     });
@@ -36,27 +42,15 @@ export class LinksService {
     dto: CreateLinkDto,
   ): Promise<SavedLinkResponse> {
     const url = dto.url.trim();
-
-    try {
-      const link = await this.prisma.savedLink.create({
-        data: {
-          userId,
-          url,
-          title: dto.title?.trim() || null,
-          description: dto.description?.trim() || null,
-        },
-      });
-      return this.formatLink(link);
-    } catch (error: any) {
-      if (
-        error.code === 'P2002' &&
-        error.meta?.target?.includes('userId') &&
-        error.meta?.target?.includes('url')
-      ) {
-        throw new ConflictException(LinksErrorCode.LINK_ALREADY_EXISTS);
-      }
-      throw error;
-    }
+    const link = await this.prisma.savedLink.create({
+      data: {
+        userId,
+        url,
+        title: dto.title?.trim() || null,
+        description: dto.description?.trim() || null,
+      },
+    });
+    return this.formatLink(link);
   }
 
   async updateLink(
@@ -72,7 +66,7 @@ export class LinksService {
       throw new NotFoundException(LinksErrorCode.LINK_NOT_FOUND);
     }
 
-    const updateData: any = {};
+    const updateData: Prisma.SavedLinkUpdateInput = {};
     if (dto.title !== undefined) {
       updateData.title = dto.title.trim() || null;
     }
@@ -102,7 +96,7 @@ export class LinksService {
     });
   }
 
-  private formatLink(link: any): SavedLinkResponse {
+  private formatLink(link: SavedLink): SavedLinkResponse {
     return {
       id: link.id,
       url: link.url,

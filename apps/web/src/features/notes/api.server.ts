@@ -1,5 +1,5 @@
 "server-only"
-import ApiService from "@/lib/api/api.service"
+import _ApiService from "@/lib/api/api.service"
 import { cookies } from "next/headers"
 import type { Note } from "./types"
 
@@ -9,7 +9,7 @@ export class NotesApiServer {
   static async listNotes(): Promise<Note[]> {
     const cookie = (await cookies()).toString()
     try {
-      const { data } = await ApiService.get<Note[]>(BASE_PATH, {
+      const { data } = await _ApiService.get<Note[]>(BASE_PATH, {
         headers: { cookie },
       })
       return data || []
@@ -22,7 +22,7 @@ export class NotesApiServer {
   static async getNote(id: string): Promise<Note | null> {
     const cookie = (await cookies()).toString()
     try {
-      const { data } = await ApiService.get<Note>(`${BASE_PATH}/${id}`, {
+      const { data } = await _ApiService.get<Note>(`${BASE_PATH}/${id}`, {
         headers: { cookie },
       })
       return data || null

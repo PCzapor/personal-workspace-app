@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { AuthApiClient } from "@/features/auth/AuthApi.client"
-import { FormButton, Card, TextInput, Alert} from "@/features/ui/custom"
+import { Card, TextInput, Alert, Button } from "@/features/ui/custom"
 import Link from "next/link"
 
 export default function Login() {
@@ -32,7 +32,6 @@ export default function Login() {
   }
 
   return (
-    
     <Card>
       <div className='space-y-2'>
         <h1 className='text-2xl font-semibold text-white'>Welcome back</h1>
@@ -41,25 +40,25 @@ export default function Login() {
 
       <form className='mt-6 space-y-3' onSubmit={onSubmit}>
         <TextInput
-          label="Email"
-          type="email"
+          label='Email'
+          type='email'
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           autoComplete='email'
           inputMode='email'
           placeholder='you@domain.com'
           required
-          />
+        />
 
         <TextInput
-          label="Password"
+          label='Password'
           type='password'
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           autoComplete='current-password'
           placeholder='••••••••'
           required
-          />
+        />
 
         <label className='flex items-center gap-2 text-sm text-white/80'>
           <input
@@ -67,35 +66,34 @@ export default function Login() {
             checked={rememberMe}
             onChange={(e) => setRememberMe(e.target.checked)}
             className='h-4 w-4 rounded border-white/20 bg-white/10 text-white accent-white/90'
-            />
+          />
           Remember me
         </label>
 
         {error && (
-          <Alert variant="error" onClose={() => setError(null)}>
+          <Alert variant='error' onClose={() => setError(null)}>
             {error}
           </Alert>
         )}
 
-        <FormButton
+        <Button
           type='submit'
           isLoading={isLoading}
-          loadingText="Signing in..."
+          loadingText='Signing in...'
           className='w-full mt-2'
-          >
+        >
           Sign in
-        </FormButton>
+        </Button>
         <p className='pt-2 text-sm text-white/70'>
           Don’t have an account?{" "}
           <Link
             className='text-white underline underline-offset-4'
             href='/register'
-            >
+          >
             Create one
           </Link>
         </p>
       </form>
     </Card>
-            
   )
 }

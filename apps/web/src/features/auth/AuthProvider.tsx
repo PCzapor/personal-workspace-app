@@ -9,7 +9,8 @@ type AuthStatus = "loading" | "auth" | "guest"
 
 type AuthCtx = {
   status: AuthStatus
-  user: AuthUser
+  user: AuthUser | null
+  csrfToken: string | null
   refresh: () => Promise<void>
   logout: () => Promise<void>
 }
@@ -20,10 +21,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter()
   const [status, setStatus] = useState<AuthStatus>("loading")
   const [user, setUser] = useState<AuthUser | null>(null)
+  const [csrfToken, setCsrfToken] = useState<string | null>(null)
   const didInit = useRef(false)
+
+  const loadCsrfToken = async () => {
+    const res = await fetch("/api/csrf", { cache: "no-store" })
+    if (!res.ok) return
+    const data = (await res.json()) as { token?: string }
+    if (data.token) setCsrfToken(data.token)
+  }
 
   const loadSession = async () => {
     setStatus("loading")
+    if (!csrfToken) await loadCsrfToken()
     if (!user) {
       const me = await AuthApiClient.authMe()
       if (me) {
@@ -54,9 +64,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     router.replace("/login")
     router.refresh()
   }
-  if (!user) return null
   return (
-    <AuthContext.Provider value={{ status, user, logout, refresh }}>
+    <AuthContext.Provider value={{ status, user, csrfToken, logout, refresh }}>
       {children}
     </AuthContext.Provider>
   )

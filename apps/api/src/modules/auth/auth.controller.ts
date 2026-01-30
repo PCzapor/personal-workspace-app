@@ -105,7 +105,7 @@ export class AuthController {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const refreshToken = req.cookies?.pw_refresh;
+    const refreshToken = req.cookies?.pw_refresh as string;
     if (!refreshToken) {
       throw new UnauthorizedException(AuthErrorCode.MISSING_REFRESH_TOKEN);
     }

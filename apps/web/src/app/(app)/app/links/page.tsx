@@ -17,14 +17,10 @@ async function LoadLinks() {
 
 export default function LinksPage() {
   return (
-    <Card>
-      <div>
-        <h1 className='text-3xl font-bold text-white'>Saved Links</h1>
-        <p className='text-white/60 mt-2'>
-          Bookmark and organize your important links
-        </p>
-      </div>
-
+    <Card
+      sectionTitle='Saved Links'
+      description='Bookmark and organize your important links'
+    >
       <Suspense fallback={<LinkSkeleton count={6} />}>
         <LoadLinks />
       </Suspense>

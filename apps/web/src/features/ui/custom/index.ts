@@ -12,13 +12,14 @@ import {
   SkeletonBox,
 } from "./LoadingSkeleton"
 import { Button } from "./Button"
-import { FormButton } from "./FormButton"
 import { EmptyState } from "./EmptyState"
 import { Card } from "./Card"
+import { TextArea } from "./TextArea"
 
 export {
   Alert,
   TextInput,
+  TextArea,
   PanelSkeleton,
   CardSkeleton,
   GridSkeleton,
@@ -29,7 +30,6 @@ export {
   SkeletonLine,
   SkeletonBox,
   Button,
-  FormButton,
   EmptyState,
   Card,
 }

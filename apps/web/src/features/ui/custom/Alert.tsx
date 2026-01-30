@@ -10,9 +10,14 @@ const alertVariants = cva("rounded-2xl border p-4 flex items-start gap-3", {
       info: "bg-blue-500/10 border-blue-500/30 text-blue-300",
       success: "bg-green-500/10 border-green-500/30 text-green-300",
     },
+    size: {
+      sm: "px-3 py-1.5 text-sm",
+      md: "px-4 py-2 text-base",
+    },
   },
   defaultVariants: {
     variant: "error",
+    size: "md",
   },
 })
 
@@ -25,14 +30,14 @@ interface AlertProps
 }
 
 function AlertBase(
-  { variant, icon, onClose, className, children, ...props }: AlertProps,
-  ref: React.Ref<HTMLDivElement>
+  { variant, icon, size, onClose, className, children, ...props }: AlertProps,
+  ref: React.Ref<HTMLDivElement>,
 ) {
   return (
     <div
       ref={ref}
       role='alert'
-      className={cn(alertVariants({ variant }), className)}
+      className={cn(alertVariants({ variant, size }), className)}
       {...props}
     >
       {icon && <div className='shrink-0'>{icon}</div>}

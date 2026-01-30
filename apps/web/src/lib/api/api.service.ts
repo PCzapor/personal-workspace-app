@@ -1,10 +1,11 @@
 import axios from "axios"
 import type { AxiosRequestConfig, AxiosInstance } from "axios"
+import { getCookie } from "../helpers"
 
 class ApiService {
   private readonly axiosInstance: AxiosInstance
   private isRefreshing = false
-  private refreshSubscribers: ((token: string) => void)[] = []
+  private refreshSubscribers: (() => void)[] = []
 
   constructor() {
     this.axiosInstance = axios.create({
@@ -14,6 +15,19 @@ class ApiService {
 
     // Only set up interceptor on client-side (browser)
     if (typeof window !== "undefined") {
+      this.axiosInstance.interceptors.request.use((config) => {
+        const method = (config.method || "get").toLocaleLowerCase()
+        const isMutating = ["post", "put", "patch", "delete"].includes(method)
+
+        if (isMutating) {
+          const csrf = getCookie("csrf_token")
+          if (csrf) {
+            config.headers = config.headers ?? {}
+            config.headers["x-csrf-token"] = csrf
+          }
+        }
+        return config
+      })
       this.axiosInstance.interceptors.response.use(
         (response) => response,
         async (error) => {
@@ -40,7 +54,7 @@ class ApiService {
               await this.axiosInstance.post("/api/auth/refresh", {})
 
               this.isRefreshing = false
-              this.refreshSubscribers.forEach((callback) => callback(""))
+              this.refreshSubscribers.forEach((callback) => callback())
               this.refreshSubscribers = []
 
               return this.axiosInstance(originalRequest)
@@ -57,7 +71,7 @@ class ApiService {
           }
 
           return Promise.reject(error)
-        }
+        },
       )
     }
   }
@@ -75,7 +89,7 @@ class ApiService {
   patch<T = any, D = any>(
     url: string,
     payload: D,
-    config?: AxiosRequestConfig
+    config?: AxiosRequestConfig,
   ) {
     return this.axiosInstance.patch<T, D>(url, payload, config)
   }

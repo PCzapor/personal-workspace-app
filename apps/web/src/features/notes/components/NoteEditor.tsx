@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import type { Note } from "../types"
-import { FormButton } from "@/features/ui/custom"
+import { Button } from "@/features/ui/custom"
 
 type NoteEditorProps = {
   note: Note | null
@@ -73,7 +73,7 @@ export function NoteEditor({
           className='min-w-0 flex-1 text-xl font-semibold bg-transparent text-white/90 placeholder-white/35 focus:outline-none'
           aria-label='Note title'
         />
-        <FormButton
+        <Button
           variant={showDeleteConfirm ? "danger" : "secondary"}
           size='sm'
           onClick={handleDeleteClick}
@@ -81,7 +81,7 @@ export function NoteEditor({
           loadingText='...'
         >
           {showDeleteConfirm ? "Confirm?" : "Delete"}
-        </FormButton>
+        </Button>
       </div>
 
       <div className='text-xs text-white/70 space-y-1'>

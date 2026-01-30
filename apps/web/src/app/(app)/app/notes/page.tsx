@@ -13,13 +13,10 @@ export default async function NotesPage() {
   const initialNotes = await NotesApiServer.listNotes()
 
   return (
-    <Card>
-      <div>
-        <h1 className='text-3xl font-bold text-white'>Saved Notes</h1>
-        <p className='text-white/60 mt-2'>
-          Bookmark and organize your important notes
-        </p>
-      </div>
+    <Card
+      sectionTitle='Saved Notes'
+      description='Bookmark and organize your important notes'
+    >
       <Suspense fallback={<NotesSplitViewSkeleton />}>
         <NotesSplitView initialNotes={initialNotes} />
       </Suspense>

@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 
-import { PrismaService } from '@/modules/auth/infrastructure/prisma/prisma.service';
-
 import type { CreateNoteDto, UpdateNoteDto } from './misc/notes.types';
+
+import { PrismaService } from '@/modules/auth/infrastructure/prisma/prisma.service';
 
 @Injectable()
 export class NotesService {
@@ -29,7 +29,7 @@ export class NotesService {
     const note = await this.prisma.note.create({
       data: {
         userId,
-        title: dto.title ?? 'Untitled',
+        title: dto.title ?? (dto.content?.slice(0, 20) || 'Untitled'),
         content: dto.content ?? '',
       },
     });

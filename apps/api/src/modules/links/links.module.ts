@@ -1,7 +1,9 @@
 import { Module } from '@nestjs/common';
+
+import { AuthModule } from '../auth/auth.module';
+
 import { LinksController } from './links.controller';
 import { LinksService } from './links.service';
-import { AuthModule } from '../auth/auth.module';
 
 @Module({
   imports: [AuthModule],

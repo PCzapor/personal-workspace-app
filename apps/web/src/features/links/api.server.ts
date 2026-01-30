@@ -1,5 +1,5 @@
 "server-only"
-import ApiService from "@/lib/api/api.service"
+import _ApiService from "@/lib/api/api.service"
 import { cookies } from "next/headers"
 import type { SavedLink } from "./types"
 
@@ -8,7 +8,7 @@ export class LinksApiServer {
   static async listLinks(): Promise<SavedLink[]> {
     const cookie = (await cookies()).toString()
     try {
-      const { data } = await ApiService.get<SavedLink[]>(BASE_PATH, {
+      const { data } = await _ApiService.get<SavedLink[]>(BASE_PATH, {
         headers: { cookie },
       })
       return data || []
@@ -21,7 +21,7 @@ export class LinksApiServer {
   static async getLink(id: string): Promise<SavedLink | null> {
     const cookie = (await cookies()).toString()
     try {
-      const { data } = await ApiService.get<SavedLink>(`${BASE_PATH}/${id}`, {
+      const { data } = await _ApiService.get<SavedLink>(`${BASE_PATH}/${id}`, {
         headers: { cookie },
       })
       return data || null

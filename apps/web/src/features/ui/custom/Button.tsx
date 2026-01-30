@@ -22,17 +22,28 @@ const buttonVariants = cva(
       variant: "primary",
       size: "md",
     },
-  }
+  },
 )
 
 interface ButtonProps
   extends
     React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {}
+    VariantProps<typeof buttonVariants> {
+  isLoading?: boolean
+  loadingText?: string
+}
 
 function ButtonBase(
-  { variant, size, className, children, ...props }: ButtonProps,
-  ref: React.Ref<HTMLButtonElement>
+  {
+    variant,
+    size,
+    className,
+    isLoading = false,
+    loadingText,
+    children,
+    ...props
+  }: ButtonProps,
+  ref: React.Ref<HTMLButtonElement>,
 ) {
   return (
     <button
@@ -40,7 +51,7 @@ function ButtonBase(
       className={cn(buttonVariants({ variant, size }), className)}
       {...props}
     >
-      {children}
+      {isLoading ? loadingText || "Loading..." : children}
     </button>
   )
 }

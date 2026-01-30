@@ -12,24 +12,31 @@ const inputVariants = cva(
           "border-red-400/50 focus:ring-red-400/20 focus:border-red-400/40",
       },
     },
-    defaultVariants: {
-      state: "default",
-    },
+    defaultVariants: { state: "default" },
   },
 )
 
-interface TextInputProps
+interface TextAreaProps
   extends
-    React.InputHTMLAttributes<HTMLInputElement>,
+    React.TextareaHTMLAttributes<HTMLTextAreaElement>,
     VariantProps<typeof inputVariants> {
   label?: string
   error?: string
   helpText?: string
+  minRows?: number
 }
 
-function TextInputBase(
-  { label, error, helpText, className, id, ...props }: TextInputProps,
-  ref: React.Ref<HTMLInputElement>,
+function TextAreaBase(
+  {
+    label,
+    error,
+    helpText,
+    className,
+    id,
+    minRows = 3,
+    ...props
+  }: TextAreaProps,
+  ref: React.Ref<HTMLTextAreaElement>,
 ) {
   const inputId = id || React.useId()
   const state = error ? "error" : "default"
@@ -42,14 +49,19 @@ function TextInputBase(
         </label>
       )}
 
-      <input
+      <textarea
         ref={ref}
         id={inputId}
+        rows={minRows}
         aria-invalid={!!error}
         aria-describedby={
           error ? `${inputId}-error` : helpText ? `${inputId}-help` : undefined
         }
-        className={cn(inputVariants({ state }), className)}
+        className={cn(
+          inputVariants({ state }),
+          "resize-y min-h-[96px] leading-relaxed",
+          className,
+        )}
         {...props}
       />
 
@@ -68,5 +80,5 @@ function TextInputBase(
   )
 }
 
-export const TextInput = React.forwardRef(TextInputBase)
-TextInput.displayName = "TextInput"
+export const TextArea = React.forwardRef(TextAreaBase)
+TextArea.displayName = "TextArea"

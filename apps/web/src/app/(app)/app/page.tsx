@@ -1,66 +1,26 @@
-import { FormButton, Card } from "@/features/ui/custom"
+import { DashboardApiServer } from "@/features/dashboard/api.server"
+import { QuickAdd } from "@/features/dashboard/components/QuickAdd"
+import { RecentActivity } from "@/features/dashboard/components/RecentActivity"
+import TasksChecklist from "@/features/dashboard/components/TasksChecklist"
+import { PanelSkeleton, EmptyState } from "@/features/ui/custom"
+import { Suspense } from "react"
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  const summary = await DashboardApiServer.getSummary()
+  if (!summary) return <EmptyState title='Failed to load data.' />
+  const { recentNotes, recentLinks } = summary
+
   return (
-    <div className='space-y-6'>
-      <div className='grid gap-4 md:grid-cols-3'>
-        <Card title='Quick capture'>
-          <div className='space-y-3'>
-            <textarea
-              placeholder='Write a thought, idea, or task...'
-              className='min-h-27.5 w-full resize-none rounded-2xl border border-white/10 bg-white/4 px-4 py-3 text-sm text-white placeholder:text-white/35 outline-none focus:ring-2 focus:ring-white/20'
-            />
-            <div className='flex justify-end'>
-              <FormButton size="sm">Save</FormButton>
-            </div>
-          </div>
-        </Card>
+    <Suspense fallback={<PanelSkeleton />}>
+      <div className='space-y-6'>
+        <div className='grid gap-4 md:grid-cols-3'>
+          <TasksChecklist />
 
-        <Card title='Today'>
-          <ul className='space-y-2 text-sm text-white/70'>
-            <li className='flex items-center justify-between'>
-              <span>Review notes</span>
-              <span className='text-white/35'>—</span>
-            </li>
-            <li className='flex items-center justify-between'>
-              <span>1 deep work block</span>
-              <span className='text-white/35'>—</span>
-            </li>
-            <li className='flex items-center justify-between'>
-              <span>Inbox zero (light)</span>
-              <span className='text-white/35'>—</span>
-            </li>
-          </ul>
-        </Card>
+          <QuickAdd />
 
-        <Card title='Pinned'>
-          <div className='space-y-2'>
-            <div className='rounded-2xl border border-white/10 bg-white/4 p-3'>
-              <p className='text-sm text-white/80'>⚡ Onboarding plan</p>
-              <p className='text-xs text-white/45'>Checklist • 7 items</p>
-            </div>
-            <div className='rounded-2xl border border-white/10 bg-white/4 p-3'>
-              <p className='text-sm text-white/80'>🔗 System design links</p>
-              <p className='text-xs text-white/45'>Links • 12 saved</p>
-            </div>
-          </div>
-        </Card>
-      </div>
-
-      <Card title='Recent activity'>
-        <div className='grid gap-3 md:grid-cols-2'>
-          <div className='rounded-2xl border border-white/10 bg-white/4 p-4'>
-            <p className='text-sm text-white/80'>Note: “Auth ideas”</p>
-            <p className='mt-1 text-xs text-white/45'>Edited 5 minutes ago</p>
-          </div>
-          <div className='rounded-2xl border border-white/10 bg-white/4 p-4'>
-            <p className='text-sm text-white/80'>
-              Link saved: “Prisma sessions”
-            </p>
-            <p className='mt-1 text-xs text-white/45'>Saved today</p>
-          </div>
+          <RecentActivity recentNotes={recentNotes} recentLinks={recentLinks} />
         </div>
-      </Card>
-    </div>
+      </div>
+    </Suspense>
   )
 }
